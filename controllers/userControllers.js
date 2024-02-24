@@ -1,9 +1,12 @@
 const bcrypt = require('bcrypt');
 const userSchema = require('../models/user')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 class userControllers{
-    constructor(){}
+    constructor(){
+        var JWT_SECRET = process.env.JWT_SECRET || '';
+    }
 
     async login(email, password){
         try {
@@ -15,7 +18,7 @@ class userControllers{
             if(!passwordMatch){
                 return({"status" : "error", "message" : "la contraseña no coincide"})
             }
-            const token = jwt.sign({userId: user._id, email: user.email}, 'secreto', {expiresIn: '1h'})
+            const token = jwt.sign({userId: user._id, email: user.email}, JWT_SECRET, {expiresIn: '1h'})
             return {"status" : "success", "token": token}
 
         } catch (error) {
@@ -31,7 +34,7 @@ class userControllers{
         }
 
         const token = bearerToken.startsWith("Bearer ") ? bearerToken.slice(7) : bearerToken;
-        jwt.verify(token, this.jwtSecret, (err, decoded) => {
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
             if(err){
                 return res.status(401).json({ "message": "Token invalido"}); 
             }
