@@ -88,13 +88,25 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage: storage})
-router.post('/upload', upload.single('file'), (req, res) => {
+router.post('/upload/:id/user', upload.single('file'), (req, res) => {
+    
     if(!req.file){
-        return res.status(400).send({'status': 'error', 'message': 'no se proporciono ningun archivo'})
+        return res.status(400).send({ 'status': 'error', 'message': 'No se proporciono ningun archivo'})
     }
-    res.send({"status": "success", "message": "archivo subido correctamente"})
-})
 
- 
+    var id = req.params.id
+    var updateUsers = {
+        avatar: req.file.path
+    }
+
+    console.log(id)
+    
+    userSchema.findByIdAndUpdate(id, updateUsers, {new: true}).then((result) =>{
+        res.send({"status": "success", "message": "archivo subido correctamente"})
+    }).catch((error) => {
+        console,log(error)
+        res.send({"status": "success", "message": "error actualizando el registro"}) 
+    })
+})
 
 module.exports = router;
