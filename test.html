@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="text-align: center">
+        <h1 style="color: blue;">Mensaje en tiempo real</h1>
+        <div id="mensajes">
+
+        </div>
+        <div>
+            <input name="envioMensajes" id="envioMensajes" cols="30" rows="10">
+            <br>
+            <button style="background-color: greenyellow; color: white" type="button" id="send">Enviar</button>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var socket = io('http://localhost:3000',{
+            transports: ['websocket']
+        })
+
+        socket.on('connect', function(socket){
+            console.log("connected")
+        })
+
+        socket.on('message_receipt', function(data){
+            addMessages(data)
+        })
+
+        $("#send").click(function(){
+            preparaMessage(socket);
+        })
+        
+        $("#envioMensajes").on("keypress", function(){
+            if (event.which === 13){
+                reparaMessage(socket);
+            }
+        });
+    })
+
+    function addMessages(data, sender = false){
+        const messageElement = document.createElement('li');
+        messageElement.textContent = data.body
+        if (sender) {
+            messageElement.style.color = 'red'
+        }
+        const messagesDiv = document.getElementById('mensajes')
+        messagesDiv.appendChild(messageElement)
+        $("#envioMensajes").val("")
+    }
+
+    function preparaMessage(socket){
+        content = $("#envioMensajes").val();
+        console.log(content)
+
+        var payload = {
+                "body": content,
+                "from": "65d6acbaf54378e71eba5db5",
+                "to": "65d6ae4c853c1ef727053ae2"
+            }
+        var data = JSON.stringify(payload);
+        socket.emit("message", data)
+        addMessages(payload, true)
+        
+    }
+    
+</script>
+
+</html>
