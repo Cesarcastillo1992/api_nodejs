@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const port = 3000;
-require('dotenv').config()
+require('dotenv').config();
 const socket = require('socket.io')
 const http = require('http').Server(app)
 const io = socket(http)
@@ -13,6 +13,9 @@ const userRoutes = require('./routes/userRoutes');
 const houseRoutes = require('./routes/houseRoutes');
 const chatRoutes = require('./routes/messageRoutes');
 const messageSchema = require('./models/message');
+const { createYoga } = require('graphql-yoga');
+const schema = require('./graphql/schema');
+const resolvers = require('./graphql/resolvers');
 router.get('/', (req, res) => {
     res.send("Hello world") 
 })
@@ -34,13 +37,14 @@ io.on('connect', (socket) => {
     })
 })
 
-
 app.use(express.urlencoded({extended: true})); 
 app.use(express.json());
 app.use((req, res, next) => {
     res.io = io
     next()
 })
+const yoga = new createYoga({ schema });
+app.use('/graphql', yoga);
 app.use(router)
 app.use('/uploads', express.static('uploads'));
 app.use('/', userRoutes)
@@ -50,6 +54,4 @@ http.listen(port, () => {
     console.log('listen on ' + port) 
 })  
 
-
-
-
+module.exports = http

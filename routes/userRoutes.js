@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userSchema = require('../models/user');
 const bcrypt = require('bcrypt');
+const messageSchema = require('../models/message');
 const userControllers = require('../controllers/userControllers');
 const userController = new userControllers(); 
 const multer = require('multer');
@@ -87,7 +88,16 @@ const storage = multer.diskStorage({
 
 });
 
-const upload = multer({storage: storage})
+const fileFilter = (req, file, cb) => {    
+    if(file.mimetype.startsWith('image/')){
+        cb(null, true)
+    }else{
+        cb(new Error('El archivo no es una imagen'))
+    }
+}
+
+const upload = multer({ storage: storage, fileFilter: fileFilter})
+
 router.post('/upload/:id/user', upload.single('file'), (req, res) => {
     
     if(!req.file){
