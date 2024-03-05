@@ -50,23 +50,6 @@ const Message = new GraphQLObjectType({
         }
     }
 })
-
-//TODO: Implement House GraphQLObjectType
-// type House {
-//   id: ID!
-//   address: String!
-//   city: String!
-//   state: String!
-//   size: Int!
-//   type: String!
-//   zip_code: String!
-//   code: String!
-//   rooms: Int!
-//   bathrooms: Int!
-//   price: Int!
-//   image: String!
-// }
-
 const UserFilterInput = new GraphQLInputObjectType({
     name: 'UserFilterInput',
     fields: {

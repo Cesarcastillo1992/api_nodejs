@@ -6,6 +6,16 @@ const multer = require('multer');
 
 router.post('/house', async (req, res) => {
     let house = houseSchema({
+        id: req.body.id,
+        address: req.body.address,
+        size: req.body.size,
+        type: req.body.type,
+        zip_code: req.body.zip_code,
+        code: req.body.code,
+        rooms: req.body.rooms,
+        bathrooms: req.body.bathrooms,
+        price: req.body.price,
+        image: req.body.image,
         state: req.body.state,
         city: req.body.city,
     })
