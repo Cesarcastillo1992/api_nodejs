@@ -13,6 +13,8 @@ const userRoutes = require('./routes/userRoutes');
 const houseRoutes = require('./routes/houseRoutes');
 const chatRoutes = require('./routes/messageRoutes');
 const messageSchema = require('./models/message');
+const departmentRoutes = require('./read_file');
+
 const { createYoga } = require('graphql-yoga');
 const schema = require('./graphql/schema');
 const resolvers = require('./graphql/resolvers');

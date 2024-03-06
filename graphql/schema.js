@@ -1,5 +1,6 @@
 const {
     GraphQLID,
+    GraphQLInt,
     GraphQLObjectType,
     GraphQLBoolean,
     GraphQLString,
@@ -7,126 +8,143 @@ const {
     GraphQLList,
     GraphQLSchema
 } = require('graphql')
-const resolvers = require('./resolvers')
+const resolvers = require('./resolvers');
 
-const User = new GraphQLObjectType({
-    name: 'User',
+const user = new GraphQLObjectType({
+    name: 'user',
     fields: {
-        _id: {
-            type: GraphQLString
-        },
-        name: {
-            type: GraphQLString
-        },
-        lastname: {
-            type: GraphQLString
-        },
-        email: {
-            type: GraphQLString
-        },
-        avatar: {
-            type: GraphQLString
-        }
+        _id: {type: GraphQLString},
+        name: {type: GraphQLString},
+        lastname: {type: GraphQLString},
+        email: {type: GraphQLString},
+        avatar: {type: GraphQLString}
     }
 })
 
-const Message = new GraphQLObjectType({
-    name: 'Message',
+const message = new GraphQLObjectType({
+    name: 'message',
     fields: {
-        _id: {
-            type: GraphQLString
-        },
-        body: {
-            type: GraphQLString
-        },
-        from: {
-            type: User
-        },
-        to: {
-            type: User
-        },
-        readed: {
-            type: GraphQLBoolean
-        }
-    }
-})
-const UserFilterInput = new GraphQLInputObjectType({
-    name: 'UserFilterInput',
-    fields: {
-        name: {
-            type: GraphQLString
-        },
-        lastname: {
-            type: GraphQLString
-        },
-        email: {
-            type: GraphQLString
-        }
+        _id: {type: GraphQLString},
+        body: {type: GraphQLString},
+        from: {type: user},
+        to: {type: user},
+        readed: {type: GraphQLBoolean}
     }
 })
 
-const MessageFilterInput = new GraphQLInputObjectType({
-    name: 'MessageFilterInput',
-    fields: {
-        body: {
-            type: GraphQLString
-        },
-        from: {
-            type: GraphQLString
-        },
-        to: {
-            type: GraphQLString
-        }
+const house = new GraphQLObjectType({
+    name : "house",
+    fields : {
+        _id : { type : GraphQLString },
+        address : { type : GraphQLString },
+        city : { type : GraphQLString },
+        state : { type : GraphQLString },
+        size : { type : GraphQLInt },
+        type : { type : GraphQLString },
+        zipCode : { type : GraphQLString },
+        rooms : { type : GraphQLInt },
+        bathrooms : { type : GraphQLInt },
+        parking : { type : GraphQLBoolean },
+        price : { type : GraphQLInt },
+        code : { type : GraphQLString },
+        image : { type : GraphQLString },
     }
 })
+
+const userFilterInput = new GraphQLInputObjectType({
+    name: 'userFilterInput',
+    fields: {
+        name: {type: GraphQLString},
+        lastname: {type: GraphQLString},
+        email: {type: GraphQLString}
+    }
+})
+
+const messageFilterInput = new GraphQLInputObjectType({
+    name: 'messageFilterInput',
+    fields: {
+        body: {type: GraphQLString},
+        from: {type: GraphQLString},
+        to: {type: GraphQLString}
+    }
+})
+
+const houseFilterInput =  new GraphQLInputObjectType({
+    name : "houseFilterInput",
+    fields : {
+        _id : { type : GraphQLString },
+        address : { type: GraphQLString},
+        city : { type : GraphQLString },
+        size : { type : GraphQLInt},
+        parking : { type : GraphQLBoolean } 
+    }
+});
 
 const queries = {
     hello: {
         type: GraphQLString, 
         resolve: resolvers.hello
     },
-    User: {
-        type: User,
-        resolve: resolvers.User,
+    user: {
+        type: user,
+        resolve: resolvers.user,
         args: {
             id: {
                 type: GraphQLString
             }
         }
     },
-    Users: {
-        type: GraphQLList(User),
-        resolve: resolvers.Users
+    users: {
+        type: GraphQLList(user),
+        resolve: resolvers.users
     },
-    UsersByFilter: {
-        type: GraphQLList(User),
-        resolve: resolvers.UsersByFilter,
+    usersByFilter: {
+        type: GraphQLList(user),
+        resolve: resolvers.usersByFilter,
         args: {
             filter: {
-                type: UserFilterInput
+                type: userFilterInput
             }
         }
     },
-    Message: {
-        type: Message,
-        resolve: resolvers.Message,
+    message: {
+        type: message,
+        resolve: resolvers.message,
         args: {
             id: {
                 type: GraphQLString
             }
         }
     },
-    Messages: {
-        type: GraphQLList(Message),
-        resolve: resolvers.Messages
+    messages: {
+        type: GraphQLList(message),
+        resolve: resolvers.messages
     },
-    MessagesByFilter: {
-        type: GraphQLList(Message),
-        resolve: resolvers.MessagesByFilter,
+    messagesByFilter: {
+        type: GraphQLList(message),
+        resolve: resolvers.messagesByFilter,
         args: {
             filter: {
-                type: MessageFilterInput
+                type: messageFilterInput
             }
+        }
+    },
+    house : {
+        type : house,
+        resolve : resolvers.house,
+        args : {
+            id : {type : GraphQLString}
+        }
+    },
+    houses : {
+        type : new GraphQLList(house),
+        resolve : resolvers.houses
+    },
+    housesByFilter : {
+        type : new GraphQLList(house),
+        resolve : resolvers.housesByFilter,
+        args : {
+            filter : { type : houseFilterInput }
         }
     }
 }

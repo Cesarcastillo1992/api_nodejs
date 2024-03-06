@@ -26,7 +26,6 @@ describe('POST /user', () => {
     it('create a new user in the DB and response with the data', async () => {
         const response = await request(app).post('/user').send(objectToTest)
         userId = response.body._id;
-
         expect(response.statusCode).toBe(200)
         expect(response.body).toHaveProperty('_id')
         expect(response.body.name).toBe(objectToTest.name)
@@ -37,7 +36,6 @@ describe('POST /user', () => {
 
 describe('GET /user/:id', () => {
     it('responds with an Object that contains an specific user', async () => {
-        
         const response = await request(app).get('/user/'+ userId);      
         expect(response.status).toBe(200);
         expect(typeof response.body === "object").toBe(true);
@@ -50,23 +48,18 @@ describe('GET /user/:id', () => {
 
 describe('POST /login', () => {
     it('Success login with email and password', async () => {        
-
         const response = await request(app).post('/login').send(objectToTest)
-
         token = response.body.token;
         expect(response.statusCode).toBe(200)
         expect(response.body).toHaveProperty('token')
         expect(response.body.status).toBe("success")
     })
-
     it('Error login with email and password', async () => {
         const user = {
             "email": "lucia-pardo10@correo.com",
             "password": "UsuarioDePrueba1111"
         }
-
         const response = await request(app).post('/login').send(user)
-
         expect(response.statusCode).toBe(401)
         expect(response.body).not.toHaveProperty('token')
         expect(response.body.status).toBe("error")
@@ -75,8 +68,7 @@ describe('POST /login', () => {
 
 describe('POST /delete', () => {
     it('Success delete with _id', async () => {        
-        const response = await request(app).delete('/user/'+ userId)
-                                        .set('Authorization', 'Bearer ' + token)
+        const response = await request(app).delete('/user/'+ userId).set('Authorization', 'Bearer ' + token)
         expect(response.statusCode).toBe(200)
         expect(response.body.status).toBe("success")
     })
