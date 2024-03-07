@@ -3,10 +3,10 @@ const app = require('../index.js');
 
 const objectToTest = {
             "id": 7845454,
-            "name": "Brad",
-            "lastname": "Pitt",
-            "email": "brad-pitt@correo.com",
-            "password": "SoyBrad"
+            "name": "cesar",
+            "lastname": "castillo",
+            "email": "cesar@prueba.com",
+            "password": "abc123"
         }
 let userId;
 let token; 
